@@ -1,5 +1,7 @@
 $bgColor: #333;
 $textColor:#fff;
+$buttonColor:rgb(203, 247, 203);
+$hover: rgb(29, 112, 21) ;
 
 * {
     margin: 0;
@@ -15,15 +17,60 @@ body {
     min-height: 100vh;
 }
 
+#divPrePage {
+    display: flex;
+    justify-content: center;
+    width: 420px;
+    height: 200px;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    margin-top: 200px;
+
+    #prePage {
+        color: rgb(4, 102, 4);
+        width: 500px;
+    }
+
+    button {
+        margin: 10px;
+        margin-left: -5px;
+        width: 300px;
+        background-color: $buttonColor;
+        border-color: rgb(149, 223, 149);
+        color: green;
+        border-radius: 10px;
+        font-size: 28px;
+        font-weight: 500;
+    }
+
+    button:hover {
+        margin: 10px;
+        margin-left: -5px;
+        width: 300px;
+        background-color: $hover;
+        color: $buttonColor;
+        border-radius: 10px;
+        border-color: $buttonColor;
+        font-size: 28px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    button:active {
+        outline: none;
+    }    
+}
+
 header {
     text-align: center;
     background-color: $bgColor;
     color: rgb(228, 161, 17);
     padding: 10px;
+
     h1 {
         font-size: 48px;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
     }
+
     p {
         font-size: 22px;
     }

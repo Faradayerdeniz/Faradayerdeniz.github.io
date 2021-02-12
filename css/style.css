@@ -10,6 +10,41 @@ body {
   padding-bottom: 58px;
   min-height: 100vh; }
 
+#divPrePage {
+  display: flex;
+  justify-content: center;
+  width: 420px;
+  height: 200px;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  margin-top: 200px; }
+  #divPrePage #prePage {
+    color: #046604;
+    width: 500px; }
+  #divPrePage button {
+    margin: 10px;
+    margin-left: -5px;
+    width: 300px;
+    background-color: #cbf7cb;
+    border-color: #95df95;
+    color: green;
+    border-radius: 10px;
+    font-size: 28px;
+    font-weight: 500; }
+  #divPrePage button:hover {
+    margin: 10px;
+    margin-left: -5px;
+    width: 300px;
+    background-color: #1d7015;
+    color: #cbf7cb;
+    border-radius: 10px;
+    border-color: #cbf7cb;
+    font-size: 28px;
+    font-weight: 500;
+    cursor: pointer; }
+  #divPrePage button:active {
+    outline: none; }
+
 header {
   text-align: center;
   background-color: #333;
@@ -17,7 +52,7 @@ header {
   padding: 10px; }
   header h1 {
     font-size: 48px;
-    margin-bottom: 30px; }
+    margin-bottom: 10px; }
   header p {
     font-size: 22px; }
 

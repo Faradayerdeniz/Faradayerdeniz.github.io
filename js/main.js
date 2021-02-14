@@ -31,18 +31,18 @@ function cargadoPagina() {
     zonaBody.append(divPrePage);
 
     console.log("página principal cargada correctamente");
-}
+};
 
 //Función para crear la estructura ignorando que método "GET" sea elegido
 function estructuraDOM() {
     console.log("hola, se supone que me estoy creando.");
 
-}
+};
 
 /* -------------------XHR DUUUUUDE -------------------- */
 
 //Función genérica para hacer peticiones a una API pasando por parámetro el tipo de método y la url de la API.
-const enviarHttpRequest = (metodo, url, datos) => {
+const enviarHttpRequestXHR = (metodo, url, datos) => {
     //la promesa se queda onhold hasta que tiene el resultado, correcto o incorrecto. 
     const promise = new Promise((resultado, rechazo) => {
         //creo el request, 
@@ -81,13 +81,9 @@ const enviarHttpRequest = (metodo, url, datos) => {
 
 //Función para realizar la busqueda por XHR
 function getXHR() {
-    //maquetación principal
-    estructuraDOM();
-
     console.log("Haz elegido el método XHR para realizar la búsqueda de tiendas");
-
-    enviarHttpRequest('GET', 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/').then(respuestaDatos => {
-
+    enviarHttpRequestXHR('GET', 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/').then(respuestaDatos => {
+        //son los datos de respuesta que estoy esperando del servidor al hacerle una petición GET
         console.log(respuestaDatos);
 
         //en caso de error
@@ -96,53 +92,112 @@ function getXHR() {
         console.log(problema);
     });
 
+
+    //carga la estructura en la que se mostrarán los datos sacados del request.
+    estructuraDOM();
 };
 
 //Función para realizar el método POST de una tienda nueva por XHR
 function postXHR() {
     console.log(`Enviada la petición de subir una "Tienda"`);
-    
-/*     enviarHttpRequest('POST', 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/', {
-        //Ejemplo.
-        direccion: "Calle Tengo Depresión Severa",
-        localidad: "Tengo sueño también",
-        nombreTienda: "Nombraso Tiendaso",
-        telefono: "922202122"
 
-    }).then(respuestaDatos => {
-        console.log(respuestaDatos);
-    }); */
-    
-}
+    /*     enviarHttpRequestXHR('POST', 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/', {
+            //Ejemplo.
+            direccion: "Calle Tengo Depresión Severa",
+            localidad: "Tengo sueño también",
+            nombreTienda: "Nombraso Tiendaso",
+            telefono: "922202122"
+
+        }).then(respuestaDatos => {
+            console.log(respuestaDatos);
+        }); */
+
+};
 
 /* -------------------FETCH-------------------- */
 
 //Función para realizar la busqueda por Fetch
 async function getFetch() {
-    //maquetación principal
-    estructuraDOM();
     console.log("Haz elegido el método Fetch para realizar la búsqueda de tiendas");
-}
-//Función para realizar el método POST de una tienda nueva por XHR
+
+    enviarHttpRequestFetch('GET', 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/').then(respuestaDatos => {
+        console.log(respuestaDatos);
+    });
+
+
+    //carga la estructura en la que se mostrarán los datos sacados del request.
+    estructuraDOM();
+};
+
+//Función que recibe el método (GET O POST), la URL de la API a la que accedemos y recibe los Datos que pasa a formato JSON para su uso.
+const enviarHttpRequestFetch = (metodo, url, datos) => {
+    return fetch(url, {
+        method: metodo,
+        body: JSON.stringify(datos),
+        //Expresión ternaria, si los datos no tienen "header" se les aplica un Content-Type de tipo application/json, sino no se le aplica ningún header especial.
+        headers: datos ? {
+            'Content-Type': 'application/json'
+        } : {}
+    }).then(respuesta => {
+        if (respuesta.status >= 400) { //  = error 
+            respuesta.json().then(respuetaErronea => {
+                const error = new Error("Algo ha salido mal");
+                error.datos = respuetaErronea;
+                throw error;
+            });
+        }
+        return respuesta.json();
+    })
+};
+
+//Función para realizar el método POST de una tienda nueva por Fetch
 function postFetch() {
     console.log(`Enviada la petición de subir una "Tienda"`);
-}
+    enviarHttpRequestFetch('POST', 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/', {
+        /*Aquí dentro iría un objeto tienda que tengo que rellenar con los values de los inputs VALIDADOS*/
+    }).then(respuestaDatos => {
+        console.log(respuestaDatos);
+    }).catch(error => {
+        console.log(error, error.datos);
+    });
+
+};
 
 /* -------------------JQUERY-------------------- */
 
 //Función para realizar la busqueda por JQuery
 async function getJQuery() {
-    //maquetación principal
-    estructuraDOM();
     console.log("Haz elegido el método JQuery para realizar la búsqueda de tiendas");
 
-}
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            url: 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/',
+            success: function (datos) {
+                console.log('Datos correctos', datos);
+            },
+            error: function(){
+                alert("Error cargando datos");
+            }
+        });
+    });
+
+    //carga la estructura en la que se mostrarán los datos sacados del request.
+    estructuraDOM();
+};
 //Función para realizar el método POST de una tienda nueva por JQuery
 function postJQuery() {
     console.log(`Enviada la petición de subir una "Tienda"`);
+    $.ajax({
+        type: 'POST',
+        url: 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/',
+        success: function (datos) {
+            console.log('Datos correctos', datos);
+        }
 
+    });
 
-}
+};
 
 
 function crearNodo(tipoNodo, textoNodo, clasesNodo, atributos) {
@@ -159,14 +214,14 @@ function crearNodo(tipoNodo, textoNodo, clasesNodo, atributos) {
         atributos.forEach(atributo => nodo.setAttribute(atributo.name, atributo.value));
     }
     return nodo;
-}
+};
 
 //función para borrar nodos
 function borrarNodos(nodo) {
     while (nodo.firstChild) {
         nodo.removeChild(nodo.lastChild);
     }
-}
+};
 
 
 cargadoPagina();

@@ -2,6 +2,8 @@ const zonaMain = document.getElementsByTagName("main")[0];
 const zonaBody = document.firstElementChild.firstElementChild.nextElementSibling;
 const divTiendas = document.getElementById("Tiendas");
 const divFormulario = document.getElementById("formulario");
+
+const templateLoader = document.getElementsByTagName("template")[1].content.cloneNode(true);
 const peticion = new XMLHttpRequest();
 
 //Función cargado de la página principal con los botones
@@ -43,6 +45,7 @@ function estructuraDOM(datos) {
         name: "id",
         value: "divNuevaTienda"
     }]);
+    
     let fakeBtn = crearNodo("button", "Nueva Tienda", [], [{
         name: "id",
         value: "fakeBtn"
@@ -65,91 +68,20 @@ function estructuraDOM(datos) {
         name: "id",
         value: "divBuscasiao"
     }]);
+    
 
     divBuscasiao.appendChild(inputBuscar);
     divBuscasiao.appendChild(botonBuscar);
     divNuevaTienda.appendChild(fakeBtn);
     divNuevaTienda.appendChild(divBuscasiao);
     zonaMain.appendChild(divNuevaTienda);
-    let formulario = crearNodo("div", "", ["cerrado"], [{
-        name: "id",
-        value: "divFormulario"
-    }]);
 
-    let divGrid = crearNodo("form", "", [], [{
-        name: "id",
-        value: "divGrid"
-    }, {
-        name: "novalidate",
-        value: ""
-    }]);
-    let tituloFormulario = crearNodo("h1", "Nueva Empresa", [], [{}]);
-    let labelNombre = crearNodo("label", "Nombre", [], [{
-        name: "for",
-        value: "inputNombre"
-    }]);
-    let labelDireccion = crearNodo("label", "Dirección", [], [{
-        name: "for",
-        value: "inputDireccion"
-    }]);
-    let labelLocalidad = crearNodo("label", "Localidad", [], [{
-        name: "for",
-        value: "inputLocalidad"
-    }]);
-    let labelTelefono = crearNodo("label", "Teléfono", [], [{
-        name: "for",
-        value: "inputTelefono"
-    }]);
-    let inputNombre = crearNodo("input", "", [], [{
-        name: "id",
-        value: "inputNombre"
-    }, {
-        name: "placeholder",
-        value: "Nombre de la empresa"
-    }, {
-        name: "required",
-        value: ""
-    }]);
-    let inputDireccion = crearNodo("input", "", [], [{
-        name: "id",
-        value: "inputDireccion"
-    }, {
-        name: "placeholder",
-        value: "Dirección de la empresa"
-    }, {
-        name: "required",
-        value: ""
-    }]);
-    let inputLocalidad = crearNodo("input", "", [], [{
-        name: "id",
-        value: "inputLocalidad"
-    }, {
-        name: "placeholder",
-        value: "Localidad de la empresa"
-    }, {
-        name: "required",
-        value: ""
-    }]);
-    let inputTelefono = crearNodo("input", "", [], [{
-        name: "id",
-        value: "inputTelefono"
-    }, {
-        name: "placeholder",
-        value: "Teléfono de la empresa"
-    }, {
-        name: "required",
-        value: ""
-    }]);
-    let addTienda = crearNodo("button", "Añadir Tienda", [], [{
-        name: "id",
-        value: "addTienda"
-    }]);
+    
 
-    divGrid.append(labelNombre, inputNombre, labelDireccion, inputDireccion, labelLocalidad, inputLocalidad, labelTelefono, inputTelefono, addTienda);
-
-    formulario.append(tituloFormulario);
-    formulario.appendChild(divGrid);
-    zonaMain.appendChild(formulario);
+    let desplegable = document.getElementsByTagName("template")[0].content.cloneNode(true);
+    zonaMain.appendChild(desplegable);
+    
+    
 
     datos.forEach(tienda => {
         let padentroTiendas = (crearNodo("div", "", ["tienda"], [{}]));
@@ -162,15 +94,28 @@ function estructuraDOM(datos) {
         padentroTiendas.appendChild(telefonoTienda);
         zonaMain.appendChild(padentroTiendas);
     });
-
+    fakeBtn.addEventListener('click', () => {
+        if (divFormulario.classList.contains("abierto")) {
+            document.getElementById("divFormulario").classList.replace("abierto", "cerrado");
+        }
+        else {
+            document.getElementById("divFormulario").classList.replace("cerrado", "abierto");
+        }
+    });
 };
 
 
 
+function loader() {
+    borrarNodos(zonaMain);
+    borrarNodos(divPrePage);
+    zonaBody.appendChild(templateLoader);
+}
 /* -------------------XHR-------------------- */
 
 //Función para realizar la busqueda por XHR
 function getXHR() {
+    loader();
     console.log("Haz elegido el método XHR para realizar la búsqueda de tiendas");
 
     if (peticion.readyState === 4 && peticion.status === 200) {
@@ -182,7 +127,6 @@ function getXHR() {
     }
     peticion.open("GET", "https://webapp-210130211157.azurewebsites.net/webresources/mitienda/");
     peticion.send();
-
 };
 
 //Función para realizar el método POST de una tienda nueva por XHR
@@ -195,6 +139,7 @@ function postXHR() {
 
 //Función para realizar la busqueda por Fetch
 async function getFetch() {
+    loader();
     console.log("Haz elegido el método Fetch para realizar la búsqueda de tiendas");
     await fetch('https://webapp-210130211157.azurewebsites.net/webresources/mitienda/')
         .then(function (respuesta) {
@@ -209,14 +154,8 @@ async function getFetch() {
         .catch(error => {
             console.log(error);
         });
-
+        borrarNodos(templateLoader);
 }
-
-
-
-
-
-//Función que recibe el método (GET O POST), la URL de la API a la que accedemos y recibe los Datos que pasa a formato JSON para su uso.
 
 
 //Función para realizar el método POST de una tienda nueva por Fetch
@@ -236,6 +175,7 @@ function postFetch() {
 
 //Función para realizar la busqueda por JQuery
 async function getJQuery() {
+    loader();
     console.log("Haz elegido el método JQuery para realizar la búsqueda de tiendas");
     $.ajax({
         type: "GET",

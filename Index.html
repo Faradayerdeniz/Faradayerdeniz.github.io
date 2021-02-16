@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="./css/style.css">
     <title>Consultando API de Tiendas</title>
 </head>
+
 <body>
     <header>
         <h1>Tiendas</h1>
@@ -14,13 +16,42 @@
     <main>
         <div id="formulario"></div>
         <div id="Tiendas">
-            
+
         </div>
     </main>
     <footer>
         <h3>Alexander Déniz Bolaños - 2º DAW - A</h3>
     </footer>
+    <template id="desplegable">
+        <form id ="divFormulario" class="cerrado">
+            <div class="divNombre">
+                <label for="inputNombre">Nombre</label>
+                <input type="text" id="inputNombre" placeholder="Nombre de la empresa">
+                <span id="errorNombre"></span>
+            </div>
+            <div class="divDireccion">
+                <label for="inputDireccion">Dirección</label>
+                <input type="text" id="inputDireccion" placeholder="Dirección de la empresa">
+                <span id="errorDireccion"></span>
+            </div>
+            <div class="divLocalidad">
+                <label for="inputLocalidad">Localidad</label>
+                <input type="text" id="inputLocalidad" placeholder="Localidad de la empresa">
+                <span id="errorLocalidad"></span>
+            </div>
+            <div class="divTelefono">
+                <label for="inputTelefono">Teléfono</label>
+                <input type="text" id="inputTelefono" placeholder="Telefono de la empresa">
+                <span id="errorTelefono"></span>
+            </div>
+        </form>
+    </template>
+    <template id="loader">
+        <div class="loading loading--full-height"></div>>
+    </template>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="./js/main.js" type="module"></script>
 </body>
+
 </html>

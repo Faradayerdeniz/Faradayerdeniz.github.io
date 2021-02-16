@@ -1,7 +1,9 @@
 const zonaMain = document.getElementsByTagName("main")[0];
 const zonaBody = document.firstElementChild.firstElementChild.nextElementSibling;
 const divTiendas = document.getElementById("Tiendas");
+const divFormulario = document.getElementById("formulario");
 const peticion = new XMLHttpRequest();
+
 //Función cargado de la página principal con los botones
 function cargadoPagina() {
     let divPrePage = crearNodo("div", "", [], [{
@@ -31,9 +33,8 @@ function cargadoPagina() {
     divPrePage.appendChild(botonJQuery);
 
     zonaBody.append(divPrePage);
-
-    console.log("página principal cargada correctamente");
 };
+
 
 
 //Función para crear la estructura ignorando que método "GET" sea elegido
@@ -64,11 +65,91 @@ function estructuraDOM(datos) {
         name: "id",
         value: "divBuscasiao"
     }]);
+
     divBuscasiao.appendChild(inputBuscar);
     divBuscasiao.appendChild(botonBuscar);
     divNuevaTienda.appendChild(fakeBtn);
     divNuevaTienda.appendChild(divBuscasiao);
     zonaMain.appendChild(divNuevaTienda);
+    let formulario = crearNodo("div", "", ["cerrado"], [{
+        name: "id",
+        value: "divFormulario"
+    }]);
+
+    let divGrid = crearNodo("form", "", [], [{
+        name: "id",
+        value: "divGrid"
+    }, {
+        name: "novalidate",
+        value: ""
+    }]);
+    let tituloFormulario = crearNodo("h1", "Nueva Empresa", [], [{}]);
+    let labelNombre = crearNodo("label", "Nombre", [], [{
+        name: "for",
+        value: "inputNombre"
+    }]);
+    let labelDireccion = crearNodo("label", "Dirección", [], [{
+        name: "for",
+        value: "inputDireccion"
+    }]);
+    let labelLocalidad = crearNodo("label", "Localidad", [], [{
+        name: "for",
+        value: "inputLocalidad"
+    }]);
+    let labelTelefono = crearNodo("label", "Teléfono", [], [{
+        name: "for",
+        value: "inputTelefono"
+    }]);
+    let inputNombre = crearNodo("input", "", [], [{
+        name: "id",
+        value: "inputNombre"
+    }, {
+        name: "placeholder",
+        value: "Nombre de la empresa"
+    }, {
+        name: "required",
+        value: ""
+    }]);
+    let inputDireccion = crearNodo("input", "", [], [{
+        name: "id",
+        value: "inputDireccion"
+    }, {
+        name: "placeholder",
+        value: "Dirección de la empresa"
+    }, {
+        name: "required",
+        value: ""
+    }]);
+    let inputLocalidad = crearNodo("input", "", [], [{
+        name: "id",
+        value: "inputLocalidad"
+    }, {
+        name: "placeholder",
+        value: "Localidad de la empresa"
+    }, {
+        name: "required",
+        value: ""
+    }]);
+    let inputTelefono = crearNodo("input", "", [], [{
+        name: "id",
+        value: "inputTelefono"
+    }, {
+        name: "placeholder",
+        value: "Teléfono de la empresa"
+    }, {
+        name: "required",
+        value: ""
+    }]);
+    let addTienda = crearNodo("button", "Añadir Tienda", [], [{
+        name: "id",
+        value: "addTienda"
+    }]);
+
+    divGrid.append(labelNombre, inputNombre, labelDireccion, inputDireccion, labelLocalidad, inputLocalidad, labelTelefono, inputTelefono, addTienda);
+
+    formulario.append(tituloFormulario);
+    formulario.appendChild(divGrid);
+    zonaMain.appendChild(formulario);
 
     datos.forEach(tienda => {
         let padentroTiendas = (crearNodo("div", "", ["tienda"], [{}]));
@@ -82,8 +163,9 @@ function estructuraDOM(datos) {
         zonaMain.appendChild(padentroTiendas);
     });
 
-
 };
+
+
 
 /* -------------------XHR-------------------- */
 

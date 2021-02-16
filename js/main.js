@@ -1,5 +1,7 @@
-let zonaBody = document.firstElementChild.firstElementChild.nextElementSibling;
-
+const zonaMain = document.getElementsByTagName("main")[0];
+const zonaBody = document.firstElementChild.firstElementChild.nextElementSibling;
+const divTiendas = document.getElementById("Tiendas");
+const peticion = new XMLHttpRequest();
 //Función cargado de la página principal con los botones
 function cargadoPagina() {
     let divPrePage = crearNodo("div", "", [], [{
@@ -33,84 +35,77 @@ function cargadoPagina() {
     console.log("página principal cargada correctamente");
 };
 
+
 //Función para crear la estructura ignorando que método "GET" sea elegido
-function estructuraDOM() {
-    console.log("hola, se supone que me estoy creando.");
+function estructuraDOM(datos) {
+    let divNuevaTienda = crearNodo("div", "", [], [{
+        name: "id",
+        value: "divNuevaTienda"
+    }]);
+    let fakeBtn = crearNodo("button", "Nueva Tienda", [], [{
+        name: "id",
+        value: "fakeBtn"
+    }]);
+    let inputBuscar = crearNodo("input", "", [], [{
+        name: "id",
+        value: "inputBuscar"
+    }, {
+        name: "type",
+        value: "text"
+    }, {
+        name: "placeholder",
+        value: "ID de Tienda"
+    }]);
+    let botonBuscar = crearNodo("button", "🔍", [], [{
+        name: "id",
+        value: "botonBuscar"
+    }])
+    let divBuscasiao = crearNodo("div", "", [], [{
+        name: "id",
+        value: "divBuscasiao"
+    }]);
+    divBuscasiao.appendChild(inputBuscar);
+    divBuscasiao.appendChild(botonBuscar);
+    divNuevaTienda.appendChild(fakeBtn);
+    divNuevaTienda.appendChild(divBuscasiao);
+    zonaMain.appendChild(divNuevaTienda);
 
-};
+    datos.forEach(tienda => {
+        let padentroTiendas = (crearNodo("div", "", ["tienda"], [{}]));
+        let nombreTienda = crearNodo("h1", tienda.nombreTienda, [], [{}]);
+        let direccionTienda = crearNodo("p", tienda.localidad + " " + tienda.direccion, [], [{}]);
+        let telefonoTienda = crearNodo("p", tienda.telefono, [], [{}]);
 
-/* -------------------XHR DUUUUUDE -------------------- */
-
-//Función genérica para hacer peticiones a una API pasando por parámetro el tipo de método y la url de la API.
-const enviarHttpRequestXHR = (metodo, url, datos) => {
-    //la promesa se queda onhold hasta que tiene el resultado, correcto o incorrecto. 
-    const promise = new Promise((resultado, rechazo) => {
-        //creo el request, 
-        const xhr = new XMLHttpRequest();
-        xhr.open(metodo, url);
-
-        xhr.responseType = 'json';
-
-        //Añadir headers 
-        if (datos) {
-            xhr.setRequestHeader('Content-Type', 'application/json');
-        }
-
-        xhr.onload = () => {
-            //Si el status suelta un error en la carga de los datos DE LA PROMESA, lo manejo yo.
-            //Y rechazo los datos para que no siga más adelante.
-            if (xhr.status >= 400) {
-                rechazo(xhr.response);
-                //Si el resultado es correcto, muestro el resultado satisfactorio DE LA PROMESA.
-            } else {
-                resultado(xhr.response);
-            }
-        };
-
-        //Disparo un error cuando algo relacionado con mis peticiones, 
-        //pero si la API tiene un código de error para ciertas situaciones, 
-        //no se mostrará esto, sino el error predefinido por el servidor API.
-        xhr.onerror = () => {
-            rechazo("Algo ha salido mal");
-        };
-
-        xhr.send(JSON.stringify(datos));
+        padentroTiendas.appendChild(nombreTienda);
+        padentroTiendas.appendChild(direccionTienda);
+        padentroTiendas.appendChild(telefonoTienda);
+        zonaMain.appendChild(padentroTiendas);
     });
-    return promise;
+
+
 };
+
+/* -------------------XHR-------------------- */
 
 //Función para realizar la busqueda por XHR
 function getXHR() {
     console.log("Haz elegido el método XHR para realizar la búsqueda de tiendas");
-    enviarHttpRequestXHR('GET', 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/').then(respuestaDatos => {
-        //son los datos de respuesta que estoy esperando del servidor al hacerle una petición GET
-        console.log(respuestaDatos);
 
-        //en caso de error
-    }).catch(problema => {
+    if (peticion.readyState === 4 && peticion.status === 200) {
+        let datos = peticion.responseText;
+        datos = JSON.parse(datos);
+        console.log(datos);
+        borrarNodos(divPrePage);
+        estructuraDOM(datos);
+    }
+    peticion.open("GET", "https://webapp-210130211157.azurewebsites.net/webresources/mitienda/");
+    peticion.send();
 
-        console.log(problema);
-    });
-
-
-    //carga la estructura en la que se mostrarán los datos sacados del request.
-    estructuraDOM();
 };
 
 //Función para realizar el método POST de una tienda nueva por XHR
 function postXHR() {
     console.log(`Enviada la petición de subir una "Tienda"`);
-
-    /*     enviarHttpRequestXHR('POST', 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/', {
-            //Ejemplo.
-            direccion: "Calle Tengo Depresión Severa",
-            localidad: "Tengo sueño también",
-            nombreTienda: "Nombraso Tiendaso",
-            telefono: "922202122"
-
-        }).then(respuestaDatos => {
-            console.log(respuestaDatos);
-        }); */
 
 };
 
@@ -119,36 +114,28 @@ function postXHR() {
 //Función para realizar la busqueda por Fetch
 async function getFetch() {
     console.log("Haz elegido el método Fetch para realizar la búsqueda de tiendas");
+    await fetch('https://webapp-210130211157.azurewebsites.net/webresources/mitienda/')
+        .then(function (respuesta) {
+            return respuesta.text();
+        })
+        .then(function (datos) {
+            datos = JSON.parse(datos);
+            console.log(datos);
+            borrarNodos(divPrePage);
+            estructuraDOM(datos);
+        })
+        .catch(error => {
+            console.log(error);
+        });
 
-    enviarHttpRequestFetch('GET', 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/').then(respuestaDatos => {
-        console.log(respuestaDatos);
-    });
+}
 
 
-    //carga la estructura en la que se mostrarán los datos sacados del request.
-    estructuraDOM();
-};
+
+
 
 //Función que recibe el método (GET O POST), la URL de la API a la que accedemos y recibe los Datos que pasa a formato JSON para su uso.
-const enviarHttpRequestFetch = (metodo, url, datos) => {
-    return fetch(url, {
-        method: metodo,
-        body: JSON.stringify(datos),
-        //Expresión ternaria, si los datos no tienen "header" se les aplica un Content-Type de tipo application/json, sino no se le aplica ningún header especial.
-        headers: datos ? {
-            'Content-Type': 'application/json'
-        } : {}
-    }).then(respuesta => {
-        if (respuesta.status >= 400) { //  = error 
-            respuesta.json().then(respuetaErronea => {
-                const error = new Error("Algo ha salido mal");
-                error.datos = respuetaErronea;
-                throw error;
-            });
-        }
-        return respuesta.json();
-    })
-};
+
 
 //Función para realizar el método POST de una tienda nueva por Fetch
 function postFetch() {
@@ -158,7 +145,7 @@ function postFetch() {
     }).then(respuestaDatos => {
         console.log(respuestaDatos);
     }).catch(error => {
-        console.log(error, error.datos);
+        console.log(error, error.respuestaDatos);
     });
 
 };
@@ -168,31 +155,35 @@ function postFetch() {
 //Función para realizar la busqueda por JQuery
 async function getJQuery() {
     console.log("Haz elegido el método JQuery para realizar la búsqueda de tiendas");
-
-    $(function () {
-        $.ajax({
-            type: 'GET',
-            url: 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/',
-            success: function (datos) {
-                console.log('Datos correctos', datos);
-            },
-            error: function(){
-                alert("Error cargando datos");
-            }
-        });
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/',
+        success: datos => {
+            // en data tenemos lo recibido
+            console.log(datos);
+            borrarNodos(divPrePage);
+            estructuraDOM(datos);
+        },
+        error: () => {
+            alert("error");
+        },
+        always: () => {
+            console.log("complete");
+        }
     });
-
-    //carga la estructura en la que se mostrarán los datos sacados del request.
-    estructuraDOM();
 };
+
+
+
 //Función para realizar el método POST de una tienda nueva por JQuery
 function postJQuery() {
     console.log(`Enviada la petición de subir una "Tienda"`);
     $.ajax({
         type: 'POST',
         url: 'https://webapp-210130211157.azurewebsites.net/webresources/mitienda/',
-        success: function (datos) {
-            console.log('Datos correctos', datos);
+        success: function (respuestaDatos) {
+            console.log('Datos correctos', respuestaDatos);
         }
 
     });
@@ -223,19 +214,9 @@ function borrarNodos(nodo) {
     }
 };
 
-
 cargadoPagina();
 
 //Botones principales para elegir el método de funcionamiento de la búsqueda de Tiendas (CARGADOS DESPUÉS DE CARGAR LA PÁGINA PRINCIPAL, SINO NO EXISTEN)
-document.getElementById("botonXHR").addEventListener("click", function () {
-    borrarNodos(divPrePage);
-    getXHR();
-});
-document.getElementById("botonFetch").addEventListener("click", function () {
-    borrarNodos(divPrePage);
-    getFetch();
-});
-document.getElementById("botonJQuery").addEventListener("click", function () {
-    borrarNodos(divPrePage);
-    getJQuery();
-});
+document.getElementById("botonXHR").addEventListener("click", getXHR);
+document.getElementById("botonFetch").addEventListener("click", getFetch);
+document.getElementById("botonJQuery").addEventListener("click", getJQuery);

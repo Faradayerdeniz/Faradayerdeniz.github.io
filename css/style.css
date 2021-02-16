@@ -19,31 +19,69 @@ body {
   margin: 0 auto;
   margin-top: 200px; }
   #divPrePage #prePage {
-    color: #046604;
+    color: #148314;
     width: 500px; }
   #divPrePage button {
     margin: 10px;
     margin-left: -5px;
     width: 300px;
-    background-color: #cbf7cb;
-    border-color: #95df95;
-    color: green;
-    border-radius: 10px;
+    background-color: #8ee98e;
+    border-color: #66b966;
+    color: #12530c;
+    border-radius: 8px;
     font-size: 28px;
     font-weight: 500; }
   #divPrePage button:hover {
     margin: 10px;
     margin-left: -5px;
     width: 300px;
-    background-color: #1d7015;
-    color: #cbf7cb;
+    background-color: #69f169;
+    color: #12530c;
     border-radius: 10px;
-    border-color: #cbf7cb;
+    border-color: #8ee98e;
     font-size: 28px;
     font-weight: 500;
     cursor: pointer; }
   #divPrePage button:active {
+    background-color: #12530c;
+    color: #8ee98e;
     outline: none; }
+
+.tienda {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: solid 1px #8ee98e;
+  border-radius: 10px;
+  line-height: 40px;
+  -webkit-box-shadow: 6px 5px 7px -1px rgba(19, 53, 0, 0.43);
+  box-shadow: 6px 5px 7px -1px rgba(19, 53, 0, 0.43); }
+  .tienda h1 {
+    color: #12530c; }
+
+#divNuevaTienda {
+  font-size: 30px;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 20px; }
+  #divNuevaTienda input {
+    height: 30px;
+    width: 200px;
+    margin-right: 5px;
+    line-height: 30px;
+    font-size: 20px; }
+  #divNuevaTienda input:focus {
+    border-color: #8ee98e;
+    box-shadow: 0 1px 1px rgba(4, 5, 5, 0.075) inset, 0 0 8px rgba(23, 150, 155, 0.6);
+    outline: 0 none; }
+  #divNuevaTienda #botonBuscar {
+    height: 30px;
+    width: 40px;
+    line-height: 30px; }
+  #divNuevaTienda #botonBuscar:focus {
+    border-color: #8ee98e;
+    box-shadow: 0 1px 1px rgba(4, 5, 5, 0.075) inset, 0 0 8px rgba(23, 150, 155, 0.6);
+    outline: 0 none; }
 
 header {
   text-align: center;
@@ -59,7 +97,7 @@ header {
 main {
   width: 90vw;
   margin: 0 auto;
-  padding: 30px 20px; }
+  padding: 20px; }
 
 footer {
   text-align: center;
